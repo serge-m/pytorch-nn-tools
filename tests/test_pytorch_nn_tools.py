@@ -3,10 +3,11 @@
 """Tests for `pytorch_nn_tools` package."""
 
 import pytest
-
+import torch
+from torch import nn
 from click.testing import CliRunner
 
-from pytorch_nn_tools import pytorch_nn_tools
+from pytorch_nn_tools import LayerSize
 #from pytorch_nn_tools import cli
 
 
@@ -35,3 +36,8 @@ def disabled_test_command_line_interface():
     help_result = runner.invoke(cli.main, ['--help'])
     assert help_result.exit_code == 0
     assert '--help  Show this message and exit.' in help_result.output
+
+
+def test_size():
+    ls = LayerSize("name", nn.Linear(10, 2), torch.Size((3,4)))
+    assert ls.name == "name"
