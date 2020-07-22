@@ -16,22 +16,11 @@ pytorch-nn-tools
 
 
 
-Tools for NN creation with Pytorch
+Tools for NN creation with Pytorch. The project is greatly inspired by fast.ai library.
+The project brings the convenience functions from fast.ai to a usual pytorch user.
+
 
 
 * Free software: MIT license
 * Documentation: https://pytorch-nn-tools.readthedocs.io.
 
-
-Features
---------
-
-* TODO
-
-Credits
--------
-
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
-
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
