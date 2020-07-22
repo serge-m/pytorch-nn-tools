@@ -13,7 +13,8 @@ with open('HISTORY.rst') as history_file:
 requirements = [
     'Click>=7.0',
     'torch>=1.0',
-    'torchvision>=0.6.0',
+    'torchvision',
+    'pillow',
     'dataclasses; python_version < "3.7"',
 ]
 

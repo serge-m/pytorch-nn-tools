@@ -1,6 +1,7 @@
+import PIL.Image
 import numpy as np
 import torch
-import torchvision.transforms as transforms
+import torchvision.transforms.functional as tvf
 
 imagenet_stats = dict(mean=[0.485, 0.456, 0.406],
                       std=[0.229, 0.224, 0.225])
@@ -17,33 +18,61 @@ class UnNormalize_(object):
         return tensor
 
 
-class ImageShow:
-    def __init__(self, ax, num_classes, interp_img='nearest', interp_mask='nearest', to_pil_image=transforms.ToPILImage(),
-                 cmap_mask='tab20',
-                 unnormalize_img=UnNormalize_(**imagenet_stats)
-                 ):
+def tfm_vis_img(tensor, size=None, unnormalize_img=UnNormalize_(**imagenet_stats)):
+    unnormalized = unnormalize_img(tensor.detach().clone())
+    img = tvf.to_pil_image(unnormalized, mode='RGB')
+    if size is not None:
+        img = tvf.resize(img, size, interpolation=PIL.Image.NEAREST)
+    return np.array(img)
+
+
+def tfm_vis_mask(tensor, size=None):
+    img = tvf.to_pil_image(tensor.detach().type(torch.IntTensor), mode='I')
+    if size is not None:
+        img = tvf.resize(img, size, interpolation=PIL.Image.NEAREST)
+    return np.array(img)
+
+
+DEFAULT_KWARGS_IMG = {'interpolation': 'nearest'}
+DEFAULT_KWARGS_MASK = {'interpolation': 'nearest', 'cmap': 'tab20', 'vmin': 0, 'vmax': 20}
+
+
+class ImgShow:
+    def __init__(self, ax=None, size=None,
+                 tfm_img=tfm_vis_img, tfm_mask=tfm_vis_mask,
+                 show_kwargs_img=None, show_kwargs_mask=None):
+        if show_kwargs_mask is None:
+            show_kwargs_mask = DEFAULT_KWARGS_MASK
+        if show_kwargs_img is None:
+            show_kwargs_img = DEFAULT_KWARGS_IMG
         self.ax = ax
-        self.interp_img = interp_img
-        self.interp_mask = interp_mask
-        self.num_classes = num_classes
-        self.to_pil_image = to_pil_image
-        self.cmap_mask = cmap_mask
-        self.unnormalize_img = unnormalize_img
+        self.size = size
+        self.tfm_img = tfm_img
+        self.tfm_mask = tfm_mask
+        self.show_kwargs_img = show_kwargs_img
+        self.show_kwargs_mask = show_kwargs_mask
 
-    def show_mask(self, tensor, size=None, imshow_kwargs={}):
-        img = self.to_pil_image(tensor.detach().type(torch.IntTensor))
-        if size:
-            img = img.resize(size)
-        self.ax.imshow(np.asarray(img), cmap=self.cmap_mask,
-                       interpolation=self.interp_mask, vmin=0, vmax=self.num_classes,
-                       **imshow_kwargs)
+    def with_axes(self, ax):
+        return ImgShow(ax=ax, size=self.size, tfm_img=self.tfm_img, tfm_mask=self.tfm_mask,
+                       show_kwargs_img=self.show_kwargs_img,
+                       show_kwargs_mask=self.show_kwargs_mask)
+
+    def with_size(self, size):
+        return ImgShow(ax=self.ax, size=size, tfm_img=self.tfm_img, tfm_mask=self.tfm_mask,
+                       show_kwargs_img=self.show_kwargs_img,
+                       show_kwargs_mask=self.show_kwargs_mask
+                       )
+
+    def show_image(self, tensor):
+        img = self.tfm_img(tensor, size=self.size)
+        if self.ax is None:
+            raise ValueError("axes are not defined")
+        self.ax.imshow(img, **self.show_kwargs_img)
         return self
 
-    def show_image(self, tensor, size=None, imshow_kwargs={}):
-        img = self.to_pil_image(self.unnormalize_img(tensor.detach().clone().cpu()))
-        if size:
-            img = img.resize(size)
-        self.ax.imshow(np.asarray(img), interpolation=self.interp_img, **imshow_kwargs)
+    def show_mask(self, tensor):
+        img = self.tfm_mask(tensor, size=self.size)
+        if self.ax is None:
+            raise ValueError("axes are not defined")
+        self.ax.imshow(img, **self.show_kwargs_mask)
         return self
-
-
