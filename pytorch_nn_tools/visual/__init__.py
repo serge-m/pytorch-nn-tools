@@ -41,6 +41,14 @@ class ImgShow:
     def __init__(self, ax=None, size=None,
                  tfm_img=tfm_vis_img, tfm_mask=tfm_vis_mask,
                  show_kwargs_img=None, show_kwargs_mask=None):
+        """
+        Class for visualization of tensors representing images.
+        Sample usage:
+        >>> from pytorch_nn_tools.visual import ImgShow
+        >>> import matplotlib.pyplot as plt
+        >>> ish = ImgShow(ax=plt)
+        >>> ish.show_image(torch.rand(3, 10, 20))
+        """
         if show_kwargs_mask is None:
             show_kwargs_mask = DEFAULT_KWARGS_MASK
         if show_kwargs_img is None:
@@ -64,15 +72,17 @@ class ImgShow:
                        )
 
     def show_image(self, tensor):
+        self._check_axes()
         img = self.tfm_img(tensor, size=self.size)
-        if self.ax is None:
-            raise ValueError("axes are not defined")
         self.ax.imshow(img, **self.show_kwargs_img)
         return self
 
     def show_mask(self, tensor):
+        self._check_axes()
         img = self.tfm_mask(tensor, size=self.size)
-        if self.ax is None:
-            raise ValueError("axes are not defined")
         self.ax.imshow(img, **self.show_kwargs_mask)
         return self
+
+    def _check_axes(self):
+        if self.ax is None:
+            raise ValueError("Axes are not initialized for ImageShow object")
