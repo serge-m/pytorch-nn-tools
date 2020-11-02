@@ -45,9 +45,9 @@ class ImgShow:
         Class for visualization of tensors representing images.
         Sample usage:
         >>> from pytorch_nn_tools.visual import ImgShow
-        >>> import matplotlib.pyplot as plt
-        >>> ish = ImgShow(ax=plt)
-        >>> ish.show_image(torch.rand(3, 10, 20))
+        >>> import matplotlib.pyplot as plt # doctest: +SKIP
+        >>> ish = ImgShow(ax=plt) # doctest: +SKIP
+        >>> _ = ish.show_image(torch.rand(3, 10, 20)) # doctest: +SKIP
         """
         if show_kwargs_mask is None:
             show_kwargs_mask = DEFAULT_KWARGS_MASK
