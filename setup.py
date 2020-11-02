@@ -16,6 +16,7 @@ requirements = [
     'torchvision',
     'pillow',
     'dataclasses; python_version < "3.7"',
+    'tensorboard',
 ]
 
 setup_requirements = ['pytest-runner', ]
@@ -25,7 +26,7 @@ test_requirements = ['pytest>=3', ]
 setup(
     author="SergeM",
     author_email='serge-m@users.noreply.github.com',
-    python_requires='>=3.5',
+    python_requires='>=3.6',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
