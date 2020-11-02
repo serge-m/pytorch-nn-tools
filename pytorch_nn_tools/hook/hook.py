@@ -12,7 +12,8 @@ def _hook_inner(m, i, o):
     return o
 
 
-def is_listy(x: Any) -> bool: return isinstance(x, (tuple, list))
+def is_listy(x: Any) -> bool:
+    return isinstance(x, (tuple, list))
 
 
 class Hook():
