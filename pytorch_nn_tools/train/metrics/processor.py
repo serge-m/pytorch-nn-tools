@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Dict, Union, Any, Iterable
 import enum
 
+import torch
 from pytorch_nn_tools.convert import map_dict
 from torch.utils.tensorboard import SummaryWriter
 
@@ -74,10 +75,14 @@ class MetricAggregator(MetricProcessor):
         }
 
 
+def detach_and_get_if_tensor(x):
+    return x.detach().item() if torch.is_tensor(x) else x
+
+
 class MetricMod(MetricProcessor):
     DEFAULT_SKIPPED = tuple(Marker)
 
-    def __init__(self, name_fn=lambda x: x, value_fn=lambda x: x.detach().item(),
+    def __init__(self, name_fn=lambda x: x, value_fn=detach_and_get_if_tensor,
                  skip_names: Iterable[MetricNameType] = DEFAULT_SKIPPED):
         self.name_fn = name_fn
         self.value_fn = value_fn
