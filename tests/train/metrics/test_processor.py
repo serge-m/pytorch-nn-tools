@@ -28,3 +28,15 @@ def test_metric_mod__handles_names():
         'metric1_new': val1,
         'metric2_new': approx(val2)
     }
+
+
+def test_processors_aggregation():
+    mm1 = MetricMod(name_fn=lambda x: x + "_first")
+    mm2 = MetricMod(name_fn=lambda x: x + "_second", value_fn=lambda x: x + 1)
+    mm = mm1 + mm2
+    result = mm({
+        'metric1': val1,
+    })
+    assert result == {
+        'metric1_first_second': val1+1,
+    }
