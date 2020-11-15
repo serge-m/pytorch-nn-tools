@@ -14,9 +14,14 @@ def map_dict(dictionary,
     >>> expected = {'A': 11, 'b': 2, 'C': 13}
     >>> assert map_dict(data, lambda key: key.upper(), lambda value: value + 10, skip_keys='b') == expected
 
+    >>> from collections import OrderedDict
+    >>> data = OrderedDict([(i, i+10) for i in range(1000, -1, -1)] )
+    >>> expected = dict([(i+1, i+12) for i in range(1000, -1, -1)] )
+    >>> assert map_dict(data, lambda key: key + 1 , lambda value: value + 2).items() == expected.items()
+
     """
     skip_keys = set(skip_keys)
-    return dict([
+    return type(dictionary)([
         (
             (key_fn(key), value_fn(value))
             if key not in skip_keys
