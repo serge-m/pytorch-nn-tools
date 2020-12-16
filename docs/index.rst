@@ -1,5 +1,5 @@
 Welcome to pytorch-nn-tools's documentation!
-======================================
+==============================================
 
 .. toctree::
    :maxdepth: 2
@@ -13,7 +13,7 @@ Welcome to pytorch-nn-tools's documentation!
    history
 
 Indices and tables
-==================
+===========================================
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
