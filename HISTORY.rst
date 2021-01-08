@@ -2,6 +2,15 @@
 History
 =======
 
+0.3.5 (2021-01-08)
+------------------
+* ProgressTracker tracks iterations inside each epoch
+* Cleaner version of checkpoint saver
+* Added tests
+* Drop support of python 3.5
+* Added to_device and apply_recursively helpers
+
+
 0.3.0 (2020-11-02)
 ------------------
 
