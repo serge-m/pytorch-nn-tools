@@ -43,6 +43,8 @@ def to_device(data, device):
     def _inner(x):
         if isinstance(x, torch.Tensor):
             return x.to(device, non_blocking=True)
+        if isinstance(x, torch.nn.Module):
+            return x.to(device)
         elif hasattr(x, "to_device"):
             return x.to_device(device)
         else:
