@@ -2,9 +2,9 @@
 
 language: python
 python:
-  - 3.8
-  - 3.7
-  - 3.6
+- 3.8
+- 3.7
+- 3.6
 
 # Command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install: pip install -U tox-travis
@@ -18,10 +18,11 @@ script: tox
 # $ travis encrypt --add deploy.password
 deploy:
   provider: pypi
+  edge: true
   distributions: sdist bdist_wheel
-  user: serge-m
+  username: "__token__"
   password:
-    secure: rImMLATDpmPoltGbD0MpYNjyT7ABNPUDDrGqQEw1hLL9CVxzIl8LQCJR+awUhqeuv7FHJej1RZVo/yyV/30qP9qWURMrtu5EuZzn5cBxLujKAUCE7D1w3L8tz+rxjyVgh6RM9oWW9mOysZPWpHY2msxcEs1s40jMvGDH9rqOnTZXnaBW9wP1WYBnRuPrEs7dnyQ9X/MzfTZ99tCcfP4VV0MOQoLArre8tiyXCdTMYBpynGcF4erHr+V6UpQLP49lbo9CtlUDrDLxA2l0leLnwQgN/kOA8mri0jB+B4A04o+gyBdTeOa3U9SYUCtj8S0GRvApTla/o01l38SkN5vQFdeNCMSpKKrrJp8DPU797Y713FmxUQ/bxaz0P2iPLpfj9A7ZdafArPMxRz2UL/k52oDWYHHcGTX/Yj+y9tNtbp1jzCAxBkO9Hlq/S0hBab/ftIus2t0re1lAasqi/qbDnK/PQFtBsblpPXmnPqYOVwyGn2pPQpWpD4UeHuV+uSUzq/cHTu9jOeSz8ei+uxN9aNDSmtgFgJhWPSglvjmgXx9J44fajbWv1x9Wi3TxcIpIGUL1Pa19bItt3eDWyTMp3pN3IFO8yDEGcCQp+WiNtd3vpCWgzO8UPc9ony0r/uhaOHAVkJuX4iBYvQUNM0E9jxyln1pkyuFyjRlZG4bIdMA=
+    secure: Ee/VPrDX0/My6eQ7335VsQts/ykr1kwIYuku2R4xytLQ915sgihvE9LgXoysnBR4Xi+wTUTCNOAsWBP6SRDBaBw2RRvZHprA1EyedQ/zH2suz/SwGkwMFO89jAlSDr2SJ5QVsTZM6SZCNuWrAoLujWa7h+Ini6GlagyW2ghfGdPRttkCCSS+HM2oIBxkCIJeBQfGA2WiWjLR5KIUS5o6yKReFO49sV+P0gLUothhhVF5LaycRcOEqAMqx2hUBJadDTiUGHTDJ5iX6ppBwY8ZmOm1tA4DrQ26RDnFTb90VCSyY5vqeJL/G3NCBoyAOofvA97HiKAYT/gaYaAlxPFqX2pDJ/Bqfgl5jATxHQt8Xkh5rJ0E9LJhrIuP1GBgsIbWHRiHdNJnlMbqX4Fucihy8vWoADbvfR2pjN79dnFa0B1X2AMTF8XVE06hTqOkkFGIoUBVv/OAejkV+ssSLLaysxZJojwE6EiYxKb80nn4FEOynWG71FldYxkSHXjt8R7sKAeCotntpj4cI29Zsn+mz4Xk0GtP+bIAkEiHQsJgRrVKdgM81EeA8lpUp4NQcQrAsU8fjB7ehgadKI5f/3qFagJ+ZiZnz9fxyP/zQSRRLv/ta/9i/HH0zmX4Vv/bYb2t5YywxRTQCOA8o+gZFRf8D2hhd5zukUo5FsF66aJzsrE=
   on:
     tags: true
     repo: serge-m/pytorch-nn-tools
