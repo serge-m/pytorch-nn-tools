@@ -20,13 +20,29 @@ class ProgressTracker:
         """
         self.cnt_total_iter = 0
         self.cnt_iter_in_epoch = 0
+        self._current_iterable = None
 
     def track(self, dl):
-        def tracked_iterator():
-            self.cnt_iter_in_epoch = 0
-            for x in dl:
-                self.cnt_total_iter += 1
-                self.cnt_iter_in_epoch += 1
-                yield x
+        self._current_iterable = dl
+        return self
 
-        return tracked_iterator()
+    def __next__(self):
+        if self._current_iterable is None:
+            raise ValueError("Iteration was not initialized. Use track(iterable) to start iteration.")
+        result = next(self._current_iterator)
+        self.cnt_total_iter += 1
+        self.cnt_iter_in_epoch += 1
+        return result
+
+    def __iter__(self):
+        self.cnt_iter_in_epoch = 0
+        self._current_iterator = iter(self._current_iterable)
+        return self
+
+    def __len__(self):
+        if self._current_iterable is None:
+            raise ValueError("Iteration was not initialized. Use track(iterable) to start iteration.")
+        return len(self._current_iterable)
+
+
+
