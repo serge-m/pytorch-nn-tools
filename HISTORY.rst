@@ -2,6 +2,14 @@
 History
 =======
 
+
+0.3.7 (2021-01-09)
+------------------
+* Added top-k accuracy computation, TensorBoardMetricLogger
+* ProgressTracker preserves len of iterable
+
+
+
 0.3.5 (2021-01-08)
 ------------------
 * ProgressTracker tracks iterations inside each epoch
