@@ -93,10 +93,35 @@ class MetricMod(MetricProcessor):
 
 
 class MetricLogger(MetricProcessor):
+    """
+    @deprecated Use TensorBoardMetricLogger instead
+    """
+
     def __init__(self, path: Union[str, Path]):
         path = Path(path)
         path.mkdir(exist_ok=True, parents=True)
         self.writer = SummaryWriter(path)
+
+    def __call__(self, data: MetricType) -> MetricType:
+        iteration = data.pop(Marker.ITERATION, None)
+        if iteration is None:
+            iteration = data.pop(Marker.EPOCH, None)
+        if iteration is not None:
+            for name, value in data.items():
+                self.writer.add_scalar(name, value, iteration)
+
+        return data
+
+    def close(self):
+        self.writer.close()
+
+
+class TensorBoardMetricLogger(MetricProcessor):
+    """
+    """
+
+    def __init__(self, tb_summary_writer):
+        self.writer = tb_summary_writer
 
     def __call__(self, data: MetricType) -> MetricType:
         iteration = data.pop(Marker.ITERATION, None)
