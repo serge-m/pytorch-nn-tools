@@ -18,7 +18,7 @@ def topk_accuracy(output, target, topk=(1,)) -> List:
         correct = pred.eq(target.view(1, -1).expand_as(pred))
 
         res = [
-            correct[:k].view(-1).float().sum(0, keepdim=True).div_(batch_size)
+            correct[:k].reshape(-1).float().sum(0, keepdim=True).div_(batch_size)
             for k in topk
         ]
         return res
