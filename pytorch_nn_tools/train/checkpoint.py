@@ -3,17 +3,20 @@ import logging
 from pathlib import Path
 from typing import Union, Optional
 
-import torch
+from pytorch_nn_tools.train.tensor_io.tensor_io import TensorIO
+from pytorch_nn_tools.train.tensor_io.torch_tensor_io import TorchTensorIO
 
 
 class CheckpointSaver:
-    def __init__(self, path: Union[Path, str], logger=None):
+    def __init__(self, path: Union[Path, str], logger=None, tensor_io: TensorIO = TorchTensorIO()):
         """
         Saves and loads checkpoints of the model together with optimizer and scheduler.
+        @param tensor_io:
         """
         if logger is None:
             logger = logging.getLogger(__name__)
         self.logger = logger
+        self.tensor_io = tensor_io
         self.path = Path(path)
         self.path.mkdir(parents=True, exist_ok=True)
 
@@ -66,7 +69,7 @@ class CheckpointSaver:
         return None
 
     def _save_to_fname(self, module, fname: str):
-        torch.save(module.state_dict(), self.path.joinpath(fname))
+        self.tensor_io.save(module.state_dict(), self.path.joinpath(fname))
 
     def _name_meta(self, epoch: int) -> str:
         return "epoch_{epoch:05d}.meta.json".format(epoch=epoch)
@@ -82,7 +85,7 @@ class CheckpointSaver:
 
     def _load_module_with_update(self, module_name: str, dst_module, path: Path):
         self.logger.debug(f"loading {module_name} from {path}")
-        pretrained_dict = torch.load(path)
+        pretrained_dict = self.tensor_io.load(path)
         module_dict = dst_module.state_dict()
         pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in module_dict}
         module_dict.update(pretrained_dict)
@@ -91,7 +94,7 @@ class CheckpointSaver:
     def _load_module_optional(self, module_name: str, dst_module, path: Path):
         if path.exists():
             self.logger.debug(f"loading {module_name} state from {path}")
-            module_dict = torch.load(path)
+            module_dict = self.tensor_io.load(path)
             dst_module.load_state_dict(module_dict)
         else:
             self.logger.debug(f"{module_name} state not found")
