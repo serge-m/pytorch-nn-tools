@@ -7,8 +7,11 @@ from pytorch_nn_tools.train.tensor_io.tensor_io import TensorIO
 
 
 class TorchXlaTensorIO(TensorIO):
+    def __init__(self, device=None):
+        self.device = device
+
     def save(self, obj, f: Union[str, os.PathLike, BinaryIO, IO[bytes]]):
         return xm.save(obj, f)
 
     def load(self, f):
-        return torch.load(f)
+        return torch.load(f, map_location=self.device)
