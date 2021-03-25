@@ -92,6 +92,8 @@ class CheckpointSaver:
         dst_module.load_state_dict(module_dict)
 
     def _load_module_optional(self, module_name: str, dst_module, path: Path):
+        if dst_module is None:
+            return
         if path.exists():
             self.logger.debug(f"loading {module_name} state from {path}")
             module_dict = self.tensor_io.load(path)
