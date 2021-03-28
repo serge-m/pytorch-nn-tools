@@ -2,6 +2,7 @@ import PIL.Image
 import numpy as np
 import torch
 import torchvision.transforms.functional as tvf
+from pytorch_nn_tools.devices import to_device
 
 imagenet_stats = dict(mean=[0.485, 0.456, 0.406],
                       std=[0.229, 0.224, 0.225])
@@ -86,3 +87,39 @@ class ImgShow:
     def _check_axes(self):
         if self.ax is None:
             raise ValueError("Axes are not initialized for ImageShow object")
+
+
+def show_images_with_texts(img_show_obj, imgs, texts, ncols=None, nrows=None, fig_kwargs=None, plt=None):
+    if plt is None:
+        import matplotlib.pyplot as plt
+    if fig_kwargs is None:
+        fig_kwargs = {}
+    imgs = to_device(imgs, 'cpu')
+    n = len(imgs)
+    assert len(texts) == n
+    ncols, nrows = _rectify_num_cols_rows(n, ncols, nrows)
+
+    f, axes = plt.subplots(nrows=nrows, ncols=ncols,
+                           sharex=True, sharey=True, squeeze=True,
+                           **fig_kwargs
+                           )
+    ax_list = axes.ravel()
+    for i in range(n):
+        img_show_obj.with_axes(ax_list[i]).show_image(imgs[i])
+        ax_list[i].set_title(texts[i])
+    f.tight_layout()
+
+
+def _rectify_num_cols_rows(n, ncols, nrows, default_ncols=4):
+    if ncols is not None:
+        nrows_computed = (n + ncols - 1) // ncols
+        if nrows is not None:
+            if nrows_computed != nrows:
+                raise ValueError("specify only nrows or ncols!")
+        nrows = nrows_computed
+    elif nrows is not None:
+        ncols = (n + nrows - 1) // nrows
+    else:
+        ncols = default_ncols
+        nrows = (n + ncols - 1) // ncols
+    return ncols, nrows
