@@ -1,6 +1,9 @@
 import collections
+from collections.abc import Iterable, Collection
+from typing import Union
 
 import torch
+from pytorch_nn_tools.convert.sized_map import sized_map
 
 
 def apply_recursively(func, x):
@@ -51,3 +54,20 @@ def to_device(data, device):
             return x
 
     return apply_recursively(_inner, data)
+
+
+def iter_to_device(iterable: Union[Iterable, Collection], device) -> Union[Iterable, Collection]:
+    """
+    Sends each element of the iterable to a device during iteration.
+    The __len__ of the iterable is preserved if available.
+    @param iterable: iterable to process
+    @param device: e.g. 'cpu' or torch.device('cuda')
+    @return:
+
+    >>> tensors = [torch.tensor([1]), torch.tensor([2])]
+    >>> list(iter_to_device(tensors, 'cpu'))
+    [tensor([1]), tensor([2])]
+    >>> len(iter_to_device(tensors, 'cpu'))
+    2
+    """
+    return sized_map(lambda b: to_device(b, device), iterable)

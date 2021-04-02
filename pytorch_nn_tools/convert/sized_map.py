@@ -1,8 +1,8 @@
-from collections import Iterable, Sequence, Sized
+from collections.abc import Iterable, Sequence, Sized, Collection
 from typing import Union, Callable
 
 
-def sized_map(fn: Callable, iterable: Union[Iterable, Sequence]):
+def sized_map(fn: Callable, iterable: Union[Iterable, Collection]) -> Union[Iterable, Collection]:
     """
     Like a standard `map`, but maintains the size.
     It's a convenience function to use with tqdm for example.
